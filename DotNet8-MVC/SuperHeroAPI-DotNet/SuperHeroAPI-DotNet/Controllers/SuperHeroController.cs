@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SuperHeroAPI_DotNet.Data;
 using SuperHeroAPI_DotNet.Entities;
 
 namespace SuperHeroAPI_DotNet.Controllers
@@ -8,6 +9,13 @@ namespace SuperHeroAPI_DotNet.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
+        private readonly DataContex _context;
+
+        public SuperHeroController(DataContex context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<SuperHero>>> GetAllHeroes()
         {
