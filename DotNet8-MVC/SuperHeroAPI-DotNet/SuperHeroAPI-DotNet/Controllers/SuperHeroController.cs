@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuperHeroAPI_DotNet.Data;
 using SuperHeroAPI_DotNet.Entities;
 
@@ -19,17 +20,21 @@ namespace SuperHeroAPI_DotNet.Controllers
         [HttpGet]
         public async Task<ActionResult<List<SuperHero>>> GetAllHeroes()
         {
-            var heroes = new List<SuperHero>
+            var heroes = await _context.SuperHeroes.ToListAsync();
+
+
+            return Ok(heroes);
+        }
+
+        [HttpGet("{id}")]
+       
+        public async Task<ActionResult<List<SuperHero>>> GetHero(int id)
+        {
+            var heroes = await _context.SuperHeroes.ToListAsync();
+            if(heroes is null)
             {
-                new SuperHero
-                {
-                    ID = 1,
-                    Name = "Superman",
-                    FirstName="Klark",
-                    LastName="Tent",
-                    place="USA"
-                }
-            };
+                return NotFound();
+            }
 
             return Ok(heroes);
         }
