@@ -28,16 +28,47 @@ namespace SuperHeroAPI_DotNet.Controllers
 
         [HttpGet("{id}")]
        
-        public async Task<ActionResult<List<SuperHero>>> GetHero(int id)
+        public async Task<ActionResult<SuperHero>> GetHero(int id)
         {
-            var heroes = await _context.SuperHeroes.ToListAsync();
-            if(heroes is null)
+            var hero = await _context.SuperHeroes.FindAsync(id);
+            if(hero is null)
             {
                 return NotFound();
             }
 
-            return Ok(heroes);
+            return Ok(hero);
         }
 
+        [HttpPost]
+
+        public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
+        {
+            _context.SuperHeroes.Add(hero);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.SuperHeroes.ToListAsync());
+        }
+
+        [HttpPut]
+
+        public async Task<ActionResult<List<SuperHero>>> UpdateHero(SuperHero Updatehero)
+        {
+            var dbhero = await _context.SuperHeroes.FindAsync(Updatehero.ID);
+            if (dbhero is null)
+            
+                return NotFound();
+
+            dbhero.Name = Updatehero.Name;
+            dbhero.FirstName = Updatehero.FirstName;
+            dbhero.LastName = Updatehero.LastName;
+            dbhero.place = Updatehero.place;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.SuperHeroes.ToListAsync());
+
+            
+                
+        }
     }
 }
